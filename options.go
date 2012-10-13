@@ -31,6 +31,7 @@ type Options struct {
 	ServerAddr string
 	Lang       string
 	Format     string
+	Type       string
 }
 
 //  Create a flag.FlagSet to parse the braille-printer-client's flags.
@@ -41,6 +42,7 @@ func SetupFlags(opt *Options) *flag.FlagSet {
 		"Address of braille-printer (server)")
 	fs.StringVar(&opt.Lang, "l", "ko", "Braille language {ko|en}")
 	fs.StringVar(&opt.Format, "f", "svg", "Format to print out")
+	fs.StringVar(&opt.Type, "t", "all", "Type to display in list")
 	return setupUsage(fs)
 }
 
@@ -59,6 +61,13 @@ func VerifyFlags(opt *Options, fs *flag.FlagSet) {
 	default:
 		log.Fatalf("Unkonw format, %s! Use one of text or svg.",
 			opt.Format)
+	}
+
+	switch opt.Type {
+	case "label", "paper", "all":
+	default:
+		log.Fatalf("Unkonw type, %s! Use one of label, paler or all.",
+			opt.Type)
 	}
 }
 

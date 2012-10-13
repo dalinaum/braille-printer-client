@@ -12,19 +12,26 @@ package main
  */
 
 import (
+	"encoding/json"
 	"fmt"
-	"log"
-	"strconv"
-	"strings"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
+	"strconv"
+	"strings"
 )
 
 const (
 	BRAILLE_PATH    = "/braille"
 	PRINTQ_ADD_PATH = "/printq/add"
+	PRINTQ_LIST     = "/printq/list"
 )
+
+type PrintItem struct {
+	Qid  int
+	Type string
+}
 
 var options Options
 var arguments []string
@@ -39,10 +46,10 @@ func parseStatusCode(statusString string) (int, error) {
 	if conversionError != nil {
 		return 0, fmt.Errorf("Failed to conversion %s", statusString)
 	}
-	return statusCode, nil	
+	return statusCode, nil
 }
 
-func braille() {
+func handleBraille() {
 	var input string
 	if len(arguments) > 1 {
 		input = arguments[1]
@@ -61,7 +68,7 @@ func braille() {
 
 	statusCode, conversionError := parseStatusCode(response.Status)
 	if conversionError != nil {
-		log.Fatalf("Failed to conversion: %s\n", conversionError) 
+		log.Fatalf("Failed to conversion: %s\n", conversionError)
 	}
 	if statusCode != 200 {
 		log.Fatalf("Status code is not 200\n")
@@ -74,10 +81,10 @@ func braille() {
 	fmt.Printf("%s\n", string(body))
 }
 
-func printqAdd() {
+func handlePrintqAdd() {
 	var input string
 	if len(arguments) > 1 {
-		input = arguments[1] 
+		input = arguments[1]
 	} else {
 		input = "hello world"
 	}
@@ -92,12 +99,44 @@ func printqAdd() {
 
 	statusCode, conversionError := parseStatusCode(response.Status)
 	if conversionError != nil {
-		log.Fatalf("Failed to conversion: %s\n", conversionError) 
+		log.Fatalf("Failed to conversion: %s\n", conversionError)
 	}
 	if statusCode != 200 {
 		log.Fatalf("Status code is not 200\n")
 	}
-	fmt.Printf("OK: printq-add\n");
+	fmt.Printf("OK: printq-add\n")
+}
+
+func handlePrintqList() {
+	requestUri := options.ServerAddr + PRINTQ_LIST + "?type=" + options.Type
+	response, getError := http.Get(requestUri)
+	if getError != nil {
+		log.Fatalf("Failed to open %s: %s\n", requestUri, getError)
+	}
+	defer response.Body.Close()
+
+	statusCode, conversionError := parseStatusCode(response.Status)
+	if conversionError != nil {
+		log.Fatalf("Failed to conversion: %s\n", conversionError)
+	}
+	if statusCode != 200 {
+		log.Fatalf("Status code is not 200\n")
+	}
+
+	body, readError := ioutil.ReadAll(response.Body)
+	if readError != nil {
+		log.Fatalf("Failed to read %s\n", readError)
+	}
+
+	var printqList []PrintItem
+	unmarshalError := json.Unmarshal(body, &printqList)
+	if unmarshalError != nil {
+		log.Fatalf("Failed to unmarshalError %s\n", unmarshalError)
+	}
+
+	for k, v := range(printqList) {
+		fmt.Printf("[%2d] qid: %2d type: %s\n", k + 1, v.Qid, v.Type);
+	}
 }
 
 func main() {
@@ -108,10 +147,12 @@ func main() {
 	command := arguments[0]
 	switch command {
 	case "braille":
-		braille()
+		handleBraille()
 	case "printq-add":
-		printqAdd()
+		handlePrintqAdd()
+	case "printq-list":
+		handlePrintqList()
 	default:
-		return
+		fmt.Printf("...\n")
 	}
 }
