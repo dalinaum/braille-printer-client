@@ -37,10 +37,10 @@ type Options struct {
 func SetupFlags(opt *Options) *flag.FlagSet {
 	fs := flag.NewFlagSet("braille-printer-client", flag.ExitOnError)
 	fs.BoolVar(&opt.Verbose, "v", false, "Verbose program output.")
-	fs.StringVar(&opt.ServerAddr, "a", "http://localhost:8080",
+	fs.StringVar(&opt.ServerAddr, "a", "http://braille-printer.appspot.com",
 		"Address of braille-printer (server)")
 	fs.StringVar(&opt.Lang, "l", "ko", "Braille language {ko|en}")
-	fs.StringVar(&opt.Format, "f", "svg", "Format to print out")
+	fs.StringVar(&opt.Format, "f", "svg", "Format to print out {svg|text}")
 	return setupUsage(fs)
 }
 
