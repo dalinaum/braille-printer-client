@@ -54,10 +54,6 @@ func VerifyFlags(opt *Options, fs *flag.FlagSet) {
 	}
 }
 
-/**************************/
-/* Do not edit below here */
-/**************************/
-
 //  Print a help message to standard error. See CmdHelpUsage and CmdHelpFoot.
 func PrintHelp() { SetupFlags(&Options{}).Usage() }
 
@@ -77,11 +73,11 @@ func setupUsage(fs *flag.FlagSet) *flag.FlagSet {
 }
 
 //  Parse the flags, validate them, and post-process (e.g. Initialize more complex structs).
-func parseFlags() Options {
+func parseFlags() (Options, []string) {
 	var opt Options
 	fs := SetupFlags(&opt)
 	fs.Parse(os.Args[1:])
 	VerifyFlags(&opt, fs)
 	// Process the verified Options...
-	return opt
+	return opt, fs.Args()
 }

@@ -21,17 +21,17 @@ import (
 var opt Options
 
 func init() {
-	opt = parseFlags()
+	opt, _ = parseFlags()
 }
 
 func main() {
 	response, postError := http.PostForm(opt.ServerAddr,
 		url.Values{"input": {"hello"}, "lang": {opt.Lang}})
 	if postError != nil {
-		log.Fatalf("Failed to open %s: %s\n", opt.ServerAddr, err)
+		log.Fatalf("Failed to open %s: %s\n", opt.ServerAddr, postError)
 	}
 	defer response.Body.Close()
 
-	body, _ := ioutil.ReadAll(resp.Body)
+	body, _ := ioutil.ReadAll(response.Body)
 	fmt.Printf(string(body))
 }
