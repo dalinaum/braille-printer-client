@@ -32,6 +32,7 @@ type Options struct {
 	Lang       string
 	Format     string
 	Type       string
+	Status     int
 }
 
 //  Create a flag.FlagSet to parse the braille-printer-client's flags.
@@ -44,6 +45,8 @@ func SetupFlags(opt *Options) *flag.FlagSet {
 	fs.StringVar(&opt.Format, "f", "svg", "Format to print out {svg|text}")
 	fs.StringVar(&opt.Type, "t", "all",
 		"Type to display out {all|label|paper}")
+	fs.IntVar(&opt.Status, "s", 1,
+		"Status Value. If item was printed, it should been 1.")
 	return setupUsage(fs)
 }
 
@@ -67,8 +70,16 @@ func VerifyFlags(opt *Options, fs *flag.FlagSet) {
 	switch opt.Type {
 	case "label", "paper", "all":
 	default:
-		log.Fatalf("Unkonw type, %s! Use one of label, paper or all.",
+		log.Fatalf(
+			"Unkonw type, %s! Use one of label, paper or all.",
 			opt.Type)
+	}
+
+	switch opt.Status {
+	case 0, 1:
+	default:
+		log.Fatalf("Unkonw status, %d! Use one of 0 or 1.",
+			opt.Status)
 	}
 }
 

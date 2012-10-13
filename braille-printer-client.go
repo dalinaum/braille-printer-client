@@ -27,6 +27,7 @@ const (
 	PRINTQ_ADD_PATH = "/printq/add"
 	PRINTQ_LIST     = "/printq/list"
 	PRINTQ_ITEM     = "/printq/item"
+	PRINTQ_UPDATE   = "/printq/update"
 )
 
 type PrintqItem struct {
@@ -62,8 +63,8 @@ func handleBraille() {
 	} else {
 		input = "hello world"
 	}
-	requestUri := options.ServerAddr + BRAILLE_PATH
 
+	requestUri := options.ServerAddr + BRAILLE_PATH
 	response, postError := http.PostForm(requestUri,
 		url.Values{"input": {input}, "lang": {options.Lang},
 			"format": {options.Format}})
@@ -94,8 +95,8 @@ func handlePrintqAdd() {
 	} else {
 		input = "hello world"
 	}
-	requestUri := options.ServerAddr + PRINTQ_ADD_PATH
 
+	requestUri := options.ServerAddr + PRINTQ_ADD_PATH
 	response, postError := http.PostForm(requestUri,
 		url.Values{"input": {input}, "lang": {options.Lang}})
 	if postError != nil {
@@ -184,6 +185,32 @@ func handlePrintqItem() {
 		item.Result)
 }
 
+func handlePrintqUpdate() {
+	var qid string
+	if len(arguments) > 1 {
+		qid = arguments[1]
+	} else {
+		log.Fatalf("qid is necessary to print out.");
+	}
+
+	requestUri := options.ServerAddr + PRINTQ_UPDATE + "?qid=" + qid +
+		"&status=" + strconv.Itoa(options.Status)
+	response, postError := http.PostForm(requestUri, url.Values {})
+	if postError != nil {
+		log.Fatalf("Failed to open %s: %s\n", requestUri, postError)
+	}
+	defer response.Body.Close()
+
+	statusCode, conversionError := parseStatusCode(response.Status)
+	if conversionError != nil {
+		log.Fatalf("Failed to conversion: %s\n", conversionError)
+	}
+	if statusCode != 200 {
+		log.Fatalf("Status code is not 200\n")
+	}
+	fmt.Printf("OK: printq-update\n")
+}
+
 func main() {
 	if len(arguments) == 0 {
 		return
@@ -199,6 +226,8 @@ func main() {
 		handlePrintqList()
 	case "printq-item":
 		handlePrintqItem()
+	case "printq-update":
+		handlePrintqUpdate()
 	default:
 		fmt.Printf("...\n")
 	}
