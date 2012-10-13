@@ -25,14 +25,14 @@ Prerequisites
 Installation
 -------------
 
-    go get github.com/suapapa/braille-printer-client
+    go get github.com/dalinaum/braille-printer-client
 
 General Documentation
 ---------------------
 
 Use `go doc` to vew the documentation for braille-printer-client
 
-    go doc github.com/suapapa/braille-printer-client
+    go doc github.com/dalinaum/braille-printer-client
 
 Or alternatively, use a godoc http server
 
@@ -44,12 +44,13 @@ and visit [the Godoc URL][]
 Author
 ======
 
+Leonardo YongUk kIm &lt;dalinaum@gmail.com&gt;
 Homin Lee &lt;homin.lee@suapapa.net&gt;
 
 Copyright & License
 ===================
 
-Copyright (c) 2012, Homin Lee.
+Copyright (c) 2012, Braille Printer Team.
 All rights reserved.
 Use of this source code is governed by a BSD-style license that can be
 found in the LICENSE file.

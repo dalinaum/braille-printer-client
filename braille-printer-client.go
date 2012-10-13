@@ -1,11 +1,11 @@
-// Copyright 2012, Homin Lee. All rights reserved.
+// Copyright 2012, Braille Printer Team. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
 package main
 
 /*  Filename:    braille-printer-client.go
- *  Author:      Homin Lee <homin.lee@suapapa.net>
+ *  Author:      Leonardo YongUk Kim <dalinaum@gmail.com>, Homin Lee <homin.lee@suapapa.net>
  *  Created:     2012-10-13 12:44:45.828012 +0900 KST
  *  Description: Main source file in braille-printer-client
  */
@@ -25,13 +25,13 @@ func init() {
 }
 
 func main() {
-	resp2, err := http.PostForm(opt.ServerAddr,
+	response, postError := http.PostForm(opt.ServerAddr,
 		url.Values{"input": {"hello"}, "lang": {opt.Lang}})
-	if err != nil {
+	if postError != nil {
 		log.Fatalf("Failed to open %s: %s\n", opt.ServerAddr, err)
 	}
+	defer response.Body.Close()
 
-	defer resp2.Body.Close()
-	body2, _ := ioutil.ReadAll(resp2.Body)
-	fmt.Printf(string(body2))
+	body, _ := ioutil.ReadAll(resp.Body)
+	fmt.Printf(string(body))
 }
