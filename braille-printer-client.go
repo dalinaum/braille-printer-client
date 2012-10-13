@@ -18,20 +18,43 @@ import (
 	"net/url"
 )
 
-var opt Options
+var options Options
+var arguments []string 
 
 func init() {
-	opt, _ = parseFlags()
+	options, arguments = parseFlags()
 }
 
-func main() {
-	response, postError := http.PostForm(opt.ServerAddr,
-		url.Values{"input": {"hello"}, "lang": {opt.Lang}})
+func braille() {
+	var input string
+	if len(arguments) > 1 {
+		input = arguments[1]
+	} else {
+		input = "hello world"
+	}
+	response, postError := http.PostForm(options.ServerAddr,
+		url.Values{"input": {input}, "lang": {options.Lang}})
 	if postError != nil {
-		log.Fatalf("Failed to open %s: %s\n", opt.ServerAddr, postError)
+		log.Fatalf("Failed to open %s: %s\n", options.ServerAddr, postError)
 	}
 	defer response.Body.Close()
 
-	body, _ := ioutil.ReadAll(response.Body)
+	body, readError := ioutil.ReadAll(response.Body)
+	if readError != nil {
+		log.Fatalf("Failed to read %s\n", readError)
+	}
 	fmt.Printf(string(body))
+}
+
+func main() {
+	if len(arguments) == 0 {
+		return
+	}
+
+	switch command := arguments[0]; command {
+		case "braille":
+			braille()
+		default:
+			return
+	}
 }
