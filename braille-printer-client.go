@@ -18,6 +18,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -61,7 +62,8 @@ func handleBraille() {
 	if len(arguments) > 1 {
 		input = arguments[1]
 	} else {
-		input = "hello world"
+		fmt.Fprint(os.Stderr, "Error: input string is missin.\n\n")
+		PrintHelp()
 	}
 
 	requestUri := options.ServerAddr + BRAILLE_PATH
@@ -93,7 +95,8 @@ func handlePrintqAdd() {
 	if len(arguments) > 1 {
 		input = arguments[1]
 	} else {
-		input = "hello world"
+		fmt.Fprint(os.Stderr, "Error: input string is missin.\n\n")
+		PrintHelp()
 	}
 
 	requestUri := options.ServerAddr + PRINTQ_ADD_PATH
@@ -151,7 +154,8 @@ func handlePrintqItem() {
 	if len(arguments) > 1 {
 		qid = arguments[1]
 	} else {
-		log.Fatalf("qid is necessary to print out.")
+		fmt.Fprint(os.Stderr, "Error: qid is necessary to print out.\n\n")
+		PrintHelp()
 	}
 
 	requestUri := options.ServerAddr + PRINTQ_ITEM + "?qid=" + qid +
@@ -190,7 +194,8 @@ func handlePrintqUpdate() {
 	if len(arguments) > 1 {
 		qid = arguments[1]
 	} else {
-		log.Fatalf("qid is necessary to print out.")
+		fmt.Fprint(os.Stderr, "Error: qid is necessary to print out.\n\n")
+		PrintHelp()
 	}
 
 	requestUri := options.ServerAddr + PRINTQ_UPDATE + "?qid=" + qid +
@@ -213,11 +218,11 @@ func handlePrintqUpdate() {
 
 func main() {
 	if len(arguments) == 0 {
+		PrintHelp()
 		return
 	}
 
-	command := arguments[0]
-	switch command {
+	switch command := arguments[0]; command {
 	case "braille":
 		handleBraille()
 	case "printq-add":
@@ -229,6 +234,6 @@ func main() {
 	case "printq-update":
 		handlePrintqUpdate()
 	default:
-		fmt.Printf("...\n")
+		PrintHelp()
 	}
 }
