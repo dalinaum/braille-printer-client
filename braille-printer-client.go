@@ -19,7 +19,7 @@ import (
 )
 
 var options Options
-var arguments []string 
+var arguments []string
 
 func init() {
 	options, arguments = parseFlags()
@@ -32,6 +32,7 @@ func braille() {
 	} else {
 		input = "hello world"
 	}
+
 	response, postError := http.PostForm(options.ServerAddr,
 		url.Values{"input": {input}, "lang": {options.Lang}})
 	if postError != nil {
@@ -52,9 +53,9 @@ func main() {
 	}
 
 	switch command := arguments[0]; command {
-		case "braille":
-			braille()
-		default:
-			return
+	case "braille":
+		braille()
+	default:
+		return
 	}
 }
