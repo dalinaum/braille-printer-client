@@ -5,7 +5,7 @@
 package main
 
 /*  Filename:    options.go
- *  Author:      Homin Lee <homin.lee@suapapa.net>
+ *  Author:      Leonardo YongUkKim <dalinaum@gmail.com>, Homin Lee <homin.lee@suapapa.net>
  *  Created:     2012-10-13 12:44:45.83294 +0900 KST
  *  Description: Option parsing for braille-printer-client
  */
@@ -29,6 +29,7 @@ type Options struct {
 	Verbose    bool
 	ServerAddr string
 	Lang       string
+	Format     string
 }
 
 //  Create a flag.FlagSet to parse the braille-printer-client's flags.
@@ -38,6 +39,7 @@ func SetupFlags(opt *Options) *flag.FlagSet {
 	fs.StringVar(&opt.ServerAddr, "a", "http://localhost:8080/braille",
 		"Address of braille-printer (server)")
 	fs.StringVar(&opt.Lang, "l", "ko", "Braille language {ko|en}")
+	fs.StringVar(&opt.Format, "f", "svg", "Format to print out")
 	return setupUsage(fs)
 }
 
@@ -46,11 +48,15 @@ func SetupFlags(opt *Options) *flag.FlagSet {
 // the error.
 func VerifyFlags(opt *Options, fs *flag.FlagSet) {
 	switch opt.Lang {
-	case "ko":
-	case "en":
+	case "ko", "en":
 	default:
 		log.Fatalf("Unknown lang, %s! Use one of ko or en.", opt.Lang)
+	}
 
+	switch opt.Format {
+	case "text", "svg":
+	default:
+		log.Fatalf("Unkonw format, %s! Use one of text or svg.", opt.Format)
 	}
 }
 

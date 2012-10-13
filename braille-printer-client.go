@@ -34,7 +34,7 @@ func braille() {
 	}
 
 	response, postError := http.PostForm(options.ServerAddr,
-		url.Values{"input": {input}, "lang": {options.Lang}})
+		url.Values{"input": {input}, "lang": {options.Lang}, "format": {options.Format}})
 	if postError != nil {
 		log.Fatalf("Failed to open %s: %s\n", options.ServerAddr, postError)
 	}
@@ -44,7 +44,10 @@ func braille() {
 	if readError != nil {
 		log.Fatalf("Failed to read %s\n", readError)
 	}
-	fmt.Printf(string(body))
+	fmt.Printf("%s\n", string(body))
+}
+
+func printqAdd() {
 }
 
 func main() {
@@ -55,6 +58,8 @@ func main() {
 	switch command := arguments[0]; command {
 	case "braille":
 		braille()
+	case "printq-add":
+		printqAdd()
 	default:
 		return
 	}
