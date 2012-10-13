@@ -28,7 +28,7 @@ var (
 type Options struct {
 	Verbose    bool
 	ServerAddr string
-	Lang string
+	Lang       string
 }
 
 //  Create a flag.FlagSet to parse the braille-printer-client's flags.

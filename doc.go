@@ -8,7 +8,6 @@
  *  Description: Godoc documentation for braille-printer-client
  */
 
-
 /*
 braille-printer-client does...
 
