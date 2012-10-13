@@ -134,8 +134,8 @@ func handlePrintqList() {
 		log.Fatalf("Failed to unmarshalError %s\n", unmarshalError)
 	}
 
-	for k, v := range(printqList) {
-		fmt.Printf("[%2d] qid: %2d type: %s\n", k + 1, v.Qid, v.Type);
+	for k, v := range printqList {
+		fmt.Printf("[%2d] qid: %2d type: %s\n", k+1, v.Qid, v.Type)
 	}
 }
 
