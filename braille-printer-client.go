@@ -151,9 +151,9 @@ func handlePrintqItem() {
 	if len(arguments) > 1 {
 		qid = arguments[1]
 	} else {
-		log.Fatalf("qid is necessary to print out.");
+		log.Fatalf("qid is necessary to print out.")
 	}
-	
+
 	requestUri := options.ServerAddr + PRINTQ_ITEM + "?qid=" + qid +
 		"&format=" + options.Format
 	response, getError := http.Get(requestUri)
@@ -190,12 +190,12 @@ func handlePrintqUpdate() {
 	if len(arguments) > 1 {
 		qid = arguments[1]
 	} else {
-		log.Fatalf("qid is necessary to print out.");
+		log.Fatalf("qid is necessary to print out.")
 	}
 
 	requestUri := options.ServerAddr + PRINTQ_UPDATE + "?qid=" + qid +
 		"&status=" + strconv.Itoa(options.Status)
-	response, postError := http.PostForm(requestUri, url.Values {})
+	response, postError := http.PostForm(requestUri, url.Values{})
 	if postError != nil {
 		log.Fatalf("Failed to open %s: %s\n", requestUri, postError)
 	}
