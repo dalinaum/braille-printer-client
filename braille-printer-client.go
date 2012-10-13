@@ -12,8 +12,8 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 )
@@ -48,6 +48,7 @@ func braille() {
 }
 
 func printqAdd() {
+
 }
 
 func main() {
