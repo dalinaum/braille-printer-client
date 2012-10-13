@@ -26,11 +26,17 @@ const (
 	BRAILLE_PATH    = "/braille"
 	PRINTQ_ADD_PATH = "/printq/add"
 	PRINTQ_LIST     = "/printq/list"
+	PRINTQ_ITEM     = "/printq/item"
 )
 
-type PrintItem struct {
+type PrintqItem struct {
 	Qid  int
 	Type string
+}
+
+type Item struct {
+	Origin string
+	Result string
 }
 
 var options Options
@@ -128,7 +134,7 @@ func handlePrintqList() {
 		log.Fatalf("Failed to read %s\n", readError)
 	}
 
-	var printqList []PrintItem
+	var printqList []PrintqItem
 	unmarshalError := json.Unmarshal(body, &printqList)
 	if unmarshalError != nil {
 		log.Fatalf("Failed to unmarshalError %s\n", unmarshalError)
@@ -137,6 +143,45 @@ func handlePrintqList() {
 	for k, v := range printqList {
 		fmt.Printf("[%2d] qid: %2d type: %s\n", k+1, v.Qid, v.Type)
 	}
+}
+
+func handlePrintqItem() {
+	var qid string
+	if len(arguments) > 1 {
+		qid = arguments[1]
+	} else {
+		log.Fatalf("qid is necessary to print out.");
+	}
+	
+	requestUri := options.ServerAddr + PRINTQ_ITEM + "?qid=" + qid +
+		"&format=" + options.Format
+	response, getError := http.Get(requestUri)
+	if getError != nil {
+		log.Fatalf("Failed to open %s: %s\n", requestUri, getError)
+	}
+	defer response.Body.Close()
+
+	statusCode, conversionError := parseStatusCode(response.Status)
+	if conversionError != nil {
+		log.Fatalf("Failed to conversion: %s\n", conversionError)
+	}
+	if statusCode != 200 {
+		log.Fatalf("Status code is not 200\n")
+	}
+
+	body, readError := ioutil.ReadAll(response.Body)
+	if readError != nil {
+		log.Fatalf("Failed to read %s\n", readError)
+	}
+
+	var item Item
+	unmarshalError := json.Unmarshal(body, &item)
+	if unmarshalError != nil {
+		log.Fatalf("Failed to unmarshalError %s\n", unmarshalError)
+	}
+
+	fmt.Printf("[qid: %d]\n -from: %s\n -to: %s\n", qid, item.Origin,
+		item.Result)
 }
 
 func main() {
@@ -152,6 +197,8 @@ func main() {
 		handlePrintqAdd()
 	case "printq-list":
 		handlePrintqList()
+	case "printq-item":
+		handlePrintqItem()
 	default:
 		fmt.Printf("...\n")
 	}
