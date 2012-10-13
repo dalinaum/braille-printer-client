@@ -38,11 +38,12 @@ type Options struct {
 func SetupFlags(opt *Options) *flag.FlagSet {
 	fs := flag.NewFlagSet("braille-printer-client", flag.ExitOnError)
 	fs.BoolVar(&opt.Verbose, "v", false, "Verbose program output.")
-	fs.StringVar(&opt.ServerAddr, "a", "http://localhost:8080",
+	fs.StringVar(&opt.ServerAddr, "a", "http://braille-printer.appspot.com",
 		"Address of braille-printer (server)")
 	fs.StringVar(&opt.Lang, "l", "ko", "Braille language {ko|en}")
-	fs.StringVar(&opt.Format, "f", "svg", "Format to print out")
-	fs.StringVar(&opt.Type, "t", "all", "Type to display in list")
+	fs.StringVar(&opt.Format, "f", "svg", "Format to print out {svg|text}")
+	fs.StringVar(&opt.Type, "t", "all",
+		"Type to display out {all|label|paper}")
 	return setupUsage(fs)
 }
 
@@ -66,7 +67,7 @@ func VerifyFlags(opt *Options, fs *flag.FlagSet) {
 	switch opt.Type {
 	case "label", "paper", "all":
 	default:
-		log.Fatalf("Unkonw type, %s! Use one of label, paler or all.",
+		log.Fatalf("Unkonw type, %s! Use one of label, paper or all.",
 			opt.Type)
 	}
 }
