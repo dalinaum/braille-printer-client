@@ -50,7 +50,7 @@ func VerifyFlags(opt *Options, fs *flag.FlagSet) {
 	switch opt.Lang {
 	case "ko", "en":
 	default:
-		log.Fatalf("Unknown lang, %s! Use one of ko or en.", opt.Lang)
+		log.Fatalf("Unknown lang, %s! Use one of ko, en.", opt.Lang)
 	}
 
 	switch opt.Format {
