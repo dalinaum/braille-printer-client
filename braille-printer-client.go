@@ -5,7 +5,8 @@
 package main
 
 /*  Filename:    braille-printer-client.go
- *  Author:      Leonardo YongUk Kim <dalinaum@gmail.com>, Homin Lee <homin.lee@suapapa.net>
+ *  Author:      Leonardo YongUk Kim <dalinaum@gmail.com>, 
+ *               Homin Lee <homin.lee@suapapa.net>
  *  Created:     2012-10-13 12:44:45.828012 +0900 KST
  *  Description: Main source file in braille-printer-client
  */
@@ -13,9 +14,16 @@ package main
 import (
 	"fmt"
 	"log"
+	"strconv"
+	"strings"
 	"io/ioutil"
 	"net/http"
 	"net/url"
+)
+
+const (
+	BRAILLE_PATH    = "/braille"
+	PRINTQ_ADD_PATH = "/printq/add"
 )
 
 var options Options
@@ -25,6 +33,15 @@ func init() {
 	options, arguments = parseFlags()
 }
 
+func parseStatusCode(statusString string) (int, error) {
+	tokenizedString := strings.Split(statusString, " ")
+	statusCode, conversionError := strconv.Atoi(tokenizedString[0])
+	if conversionError != nil {
+		return 0, fmt.Errorf("Failed to conversion %s", statusString)
+	}
+	return statusCode, nil	
+}
+
 func braille() {
 	var input string
 	if len(arguments) > 1 {
@@ -32,13 +49,23 @@ func braille() {
 	} else {
 		input = "hello world"
 	}
+	requestUri := options.ServerAddr + BRAILLE_PATH
 
-	response, postError := http.PostForm(options.ServerAddr,
-		url.Values{"input": {input}, "lang": {options.Lang}, "format": {options.Format}})
+	response, postError := http.PostForm(requestUri,
+		url.Values{"input": {input}, "lang": {options.Lang},
+			"format": {options.Format}})
 	if postError != nil {
-		log.Fatalf("Failed to open %s: %s\n", options.ServerAddr, postError)
+		log.Fatalf("Failed to open %s: %s\n", requestUri, postError)
 	}
 	defer response.Body.Close()
+
+	statusCode, conversionError := parseStatusCode(response.Status)
+	if conversionError != nil {
+		log.Fatalf("Failed to conversion: %s\n", conversionError) 
+	}
+	if statusCode != 200 {
+		log.Fatalf("Status code is not 200\n")
+	}
 
 	body, readError := ioutil.ReadAll(response.Body)
 	if readError != nil {
@@ -48,7 +75,29 @@ func braille() {
 }
 
 func printqAdd() {
+	var input string
+	if len(arguments) > 1 {
+		input = arguments[1] 
+	} else {
+		input = "hello world"
+	}
+	requestUri := options.ServerAddr + PRINTQ_ADD_PATH
 
+	response, postError := http.PostForm(requestUri,
+		url.Values{"input": {input}, "lang": {options.Lang}})
+	if postError != nil {
+		log.Fatalf("Failed to open %s: %s\n", requestUri, postError)
+	}
+	defer response.Body.Close()
+
+	statusCode, conversionError := parseStatusCode(response.Status)
+	if conversionError != nil {
+		log.Fatalf("Failed to conversion: %s\n", conversionError) 
+	}
+	if statusCode != 200 {
+		log.Fatalf("Status code is not 200\n")
+	}
+	fmt.Printf("OK: printq-add\n");
 }
 
 func main() {
@@ -56,7 +105,8 @@ func main() {
 		return
 	}
 
-	switch command := arguments[0]; command {
+	command := arguments[0]
+	switch command {
 	case "braille":
 		braille()
 	case "printq-add":
