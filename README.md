@@ -44,8 +44,8 @@ and visit [the Godoc URL][]
 Author
 ======
 
-Leonardo YongUk kIm &lt;dalinaum@gmail.com&gt;
-Homin Lee &lt;homin.lee@suapapa.net&gt;
+ * Leonardo YongUk kIm &lt;dalinaum@gmail.com&gt;
+ * Homin Lee &lt;homin.lee@suapapa.net&gt;
 
 Copyright & License
 ===================
