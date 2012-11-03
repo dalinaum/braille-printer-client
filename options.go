@@ -33,6 +33,9 @@ type Options struct {
 	Format     string
 	Type       string
 	Status     int
+
+	// Options for Arduino braille-printer
+	SerialPort string
 }
 
 //  Create a flag.FlagSet to parse the braille-printer-client's flags.
@@ -47,6 +50,8 @@ func SetupFlags(opt *Options) *flag.FlagSet {
 		"Type to display out {all|label|paper}")
 	fs.IntVar(&opt.Status, "s", 1,
 		"Status Value. If item was printed, it should been 1.")
+	fs.StringVar(&opt.SerialPort, "p", "/dev/ttyACM0",
+	"Serial port which connected with braille printer hw")
 	return setupUsage(fs)
 }
 
@@ -81,6 +86,8 @@ func VerifyFlags(opt *Options, fs *flag.FlagSet) {
 		log.Fatalf("Unkonw status, %d! Use one of 0 or 1.",
 			opt.Status)
 	}
+
+	// TODO: check given port path exists
 }
 
 //  Print a help message to standard error. See CmdHelpUsage and CmdHelpFoot.

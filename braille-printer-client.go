@@ -212,7 +212,10 @@ func handlePrintqUpdate() {
 }
 
 func main() {
+	DoPrint(options.SerialPort, "Test")
+
 	if len(arguments) == 0 {
+		// TODO: print arguments list
 		return
 	}
 
