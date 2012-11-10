@@ -5,7 +5,7 @@
 About braille-printer-client
 =============
 
-braille-printer-client is the best program for...
+braille-printer-client is the program for [Braille Printer](http://braille-printer.appspot.com/)
 
 Documentation
 =============
@@ -15,7 +15,7 @@ Usage
 
 Run braille-printer-client with the command
 
-    braille-printer-client [options]
+    braille-printer-client [options] [additional argument]
 
 Prerequisites
 -------------
@@ -44,8 +44,8 @@ and visit [the Godoc URL][]
 Author
 ======
 
-Leonardo YongUk kIm &lt;dalinaum@gmail.com&gt;
-Homin Lee &lt;homin.lee@suapapa.net&gt;
+ * Leonardo YongUk kIm &lt;dalinaum@gmail.com&gt;
+ * Homin Lee &lt;homin.lee@suapapa.net&gt;
 
 Copyright & License
 ===================

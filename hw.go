@@ -5,10 +5,10 @@
 package main
 
 import (
-	"fmt"
-	/* "github.com/suapapa/go-serial/serial" */
-	"github.com/huin/goserial"
-	"log"
+	// "fmt"
+	// "github.com/suapapa/go-serial/serial"
+	// "github.com/huin/goserial"
+	// "log"
 )
 
 /*  Filename:    braille-printer-client.go
