@@ -11,9 +11,16 @@ package main
  */
 
 import (
+	"log"
 	"testing"
 )
 
 func TestBrailleprinterclient(t *testing.T) {
 
+}
+
+func TestSerialCommunication(t *testing.T) {
+	log.Println("Enter TestSerialCommunication")
+	DoPrint("/dev/ttyUSB0", "Hello world")
+	log.Println("exit TestSerialCommunication")
 }

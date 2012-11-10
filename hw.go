@@ -7,8 +7,8 @@ package main
 import (
 	// "fmt"
 	// "github.com/suapapa/go-serial/serial"
-	// "github.com/huin/goserial"
-	// "log"
+	"github.com/huin/goserial"
+	"log"
 )
 
 /*  Filename:    braille-printer-client.go
@@ -17,24 +17,23 @@ import (
  */
 
 func DoPrint(port string, braille string) {
-	// spo := serial.OpenOptions{
-	// 	PortName: port,
-	// 	BaudRate: 9600,
-	// 	DataBits: 8,
-	// 	StopBits: 1,
-	// 	InterCharacterTimeout: 10,
-	// 	MinimumReadSize: 4, // TODO: need this?
-	// }
+	log.Printf("Opening %s...\n", port)
+        c := &goserial.Config{Name: port, Baud: 9600}
+        s, err := goserial.OpenPort(c)
+        if err != nil {
+		log.Fatalf("Failed to open %s: %s\n", port, err)
+        }
 
-	// sp, err := serial.Open(spo)
-	// if err != nil {
-	// 	log.Fatalf("Fail to open serial port: %v\n", err)
-	// }
-	// defer sp.Close()
+        // n, err := s.Write([]byte("test"))
+        // if err != nil {
+        //         log.Fatal(err)
+        // }
 
-	// for _, bc := range braille {
-	// 	fmt.Println(bc)
-	// 	sp.Write([]byte{byte(bc & 0xFF),})
-	// }
-
+	log.Printf("Reading %s...\n", port)
+        buf := make([]byte, 256)
+        n, err := s.Read(buf)
+        if err != nil {
+		log.Fatalf("Failed to read from serial: %s, %d", err, n)
+        }
+	log.Printf("Read %d: %s", n, string(buf[:n]))
 }
